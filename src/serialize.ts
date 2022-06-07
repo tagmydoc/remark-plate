@@ -13,7 +13,7 @@ const isLeafNode = (node: BlockType | LeafType): node is LeafType => {
 
 const VOID_ELEMENTS: Array<keyof NodeTypes> = ['thematic_break', 'image'];
 
-const BREAK_TAG = '<br>';
+const BREAK_TAG = '\n';
 
 export default function serialize(
   chunk: BlockType | LeafType,
@@ -104,7 +104,8 @@ export default function serialize(
   if (
     !ignoreParagraphNewline &&
     (text === '' || text === '\n') &&
-    chunk.parentType === nodeTypes.paragraph
+    chunk.parentType === nodeTypes.paragraph &&
+    type !== nodeTypes.image
   ) {
     type = nodeTypes.paragraph;
     children = BREAK_TAG;
@@ -121,7 +122,7 @@ export default function serialize(
   // "Text foo bar **baz**" resulting in "**Text foo bar **baz****"
   // which is invalid markup and can mess everything up
   if (children !== BREAK_TAG && isLeafNode(chunk)) {
-    if (chunk.strikeThrough && chunk.bold && chunk.italic) {
+    if (chunk.strikethrough && chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '~~***');
     } else if (chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '***');
@@ -134,7 +135,7 @@ export default function serialize(
         children = retainWhitespaceAndFormat(children, '_');
       }
 
-      if (chunk.strikeThrough) {
+      if (chunk.strikethrough) {
         children = retainWhitespaceAndFormat(children, '~~');
       }
 
@@ -146,17 +147,17 @@ export default function serialize(
 
   switch (type) {
     case nodeTypes.heading[1]:
-      return `# ${children}\n`;
+      return `\n# ${children}\n`;
     case nodeTypes.heading[2]:
-      return `## ${children}\n`;
+      return `\n## ${children}\n`;
     case nodeTypes.heading[3]:
-      return `### ${children}\n`;
+      return `\n### ${children}\n`;
     case nodeTypes.heading[4]:
-      return `#### ${children}\n`;
+      return `\n#### ${children}\n`;
     case nodeTypes.heading[5]:
-      return `##### ${children}\n`;
+      return `\n##### ${children}\n`;
     case nodeTypes.heading[6]:
-      return `###### ${children}\n`;
+      return `\n###### ${children}\n`;
 
     case nodeTypes.block_quote:
       // For some reason, marked is parsing blockquotes w/ one new line
@@ -170,10 +171,10 @@ export default function serialize(
       }\n${children}\n\`\`\`\n`;
 
     case nodeTypes.link:
-      return `[${children}](${(chunk as BlockType).link || ''})`;
+      return `[${children}](${(chunk as BlockType).url || ''})`;
     case nodeTypes.image:
-      return `![${(chunk as BlockType).caption}](${
-        (chunk as BlockType).link || ''
+      return `![${(chunk as BlockType).caption ?? ''}](${
+        (chunk as BlockType).url || ''
       })`;
 
     case nodeTypes.ul_list:
@@ -184,7 +185,8 @@ export default function serialize(
       const isOL = chunk && chunk.parentType === nodeTypes.ol_list;
       const treatAsLeaf =
         (chunk as BlockType).children.length === 1 &&
-        isLeafNode((chunk as BlockType).children[0]);
+        ((chunk as BlockType).children[0] as BlockType).type === 'lic' &&
+        isLeafNode(((chunk as BlockType).children[0] as BlockType).children[0]);
 
       let spacer = '';
       for (let k = 0; listDepth > k; k++) {
@@ -203,7 +205,7 @@ export default function serialize(
       return `${children}\n`;
 
     case nodeTypes.thematic_break:
-      return `---\n`;
+      return `\n\n---\n`;
 
     default:
       return escapeHtml(children);

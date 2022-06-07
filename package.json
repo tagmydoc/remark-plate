@@ -1,9 +1,9 @@
 {
-  "name": "remark-slate",
+  "name": "@tagmydoc/remark-plate",
   "version": "1.8.6",
-  "description": "remark plugin to compile Markdown to a slate compatible object",
+  "description": "remark plugin to compile Markdown to a plate compatible object",
   "license": "MIT",
-  "module": "dist/remark-slate.esm.js",
+  "module": "dist/remark-plate.esm.js",
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
@@ -20,16 +20,19 @@
     "mdast",
     "markdown",
     "slate",
+    "plate",
     "RTE",
     "text editor",
-    "slate markdown"
+    "slate markdown",
+    "plate markdown"
   ],
-  "repository": "hanford/remark-slate",
-  "bugs": "https://github.com/hanford/remark-slate/issues",
+  "repository": "@tagmydoc/remark-plate",
+  "bugs": "https://github.com/tagmydoc/remark-plate/issues",
   "author": "Jack Hanford <jackhanford@gmail.com> (https://jackhanford.com)",
   "contributors": [
     "Jack Hanford <jackhanford@gmail.com> (https://jackhanford.com)",
-    "Horacio Herrera <hi@horacioh.com> (https://horacioh.com)"
+    "Horacio Herrera <hi@horacioh.com> (https://horacioh.com)",
+    "Alexandre Demers <alex.demers@tagmydoc.com> (https://www.tagmydoc.com)"
   ],
   "files": [
     "dist",
@@ -44,12 +47,9 @@
     "husky": "^4.2.5",
     "jest": "^25.2.4",
     "prettier": "^2.0.0",
-    "remark": "^13.0.0",
-    "remark-parse": "^9.0.0",
     "tsdx": "^0.13.2",
     "tslib": "^2.0.0",
-    "typescript": "^4.2.2",
-    "unified": "^9.0.0"
+    "typescript": "^4.2.2"
   },
   "prettier": {
     "printWidth": 80,

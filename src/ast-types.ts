@@ -1,25 +1,25 @@
 export interface NodeTypes {
-  paragraph: 'paragraph';
-  block_quote: 'block_quote';
+  paragraph: 'p';
+  block_quote: 'blockquote';
   code_block: 'code_block';
-  link: 'link';
-  ul_list: 'ul_list';
-  ol_list: 'ol_list';
-  listItem: 'list_item';
+  link: 'a';
+  ul_list: 'ul';
+  ol_list: 'ol';
+  listItem: 'li';
   heading: {
-    1: 'heading_one';
-    2: 'heading_two';
-    3: 'heading_three';
-    4: 'heading_four';
-    5: 'heading_five';
-    6: 'heading_six';
+    1: 'h1';
+    2: 'h2';
+    3: 'h3';
+    4: 'h4';
+    5: 'h5';
+    6: 'h6';
   };
   emphasis_mark: 'italic';
   strong_mark: 'bold';
-  delete_mark: 'strikeThrough';
+  delete_mark: 'strikethrough';
   inline_code_mark: 'code';
-  thematic_break: 'thematic_break';
-  image: 'image';
+  thematic_break: 'hr';
+  image: 'img';
 }
 
 export type MdastNodeType =
@@ -40,32 +40,32 @@ export type MdastNodeType =
   | 'text';
 
 export const defaultNodeTypes: NodeTypes = {
-  paragraph: 'paragraph',
-  block_quote: 'block_quote',
+  paragraph: 'p',
+  block_quote: 'blockquote',
   code_block: 'code_block',
-  link: 'link',
-  ul_list: 'ul_list',
-  ol_list: 'ol_list',
-  listItem: 'list_item',
+  link: 'a',
+  ul_list: 'ul',
+  ol_list: 'ol',
+  listItem: 'li',
   heading: {
-    1: 'heading_one',
-    2: 'heading_two',
-    3: 'heading_three',
-    4: 'heading_four',
-    5: 'heading_five',
-    6: 'heading_six',
+    1: 'h1',
+    2: 'h2',
+    3: 'h3',
+    4: 'h4',
+    5: 'h5',
+    6: 'h6',
   },
   emphasis_mark: 'italic',
   strong_mark: 'bold',
-  delete_mark: 'strikeThrough',
+  delete_mark: 'strikethrough',
   inline_code_mark: 'code',
-  thematic_break: 'thematic_break',
-  image: 'image',
+  thematic_break: 'hr',
+  image: 'img',
 };
 
 export interface LeafType {
   text: string;
-  strikeThrough?: boolean;
+  strikethrough?: boolean;
   bold?: boolean;
   italic?: boolean;
   code?: boolean;
@@ -75,7 +75,7 @@ export interface LeafType {
 export interface BlockType {
   type: string;
   parentType?: string;
-  link?: string;
+  url?: string;
   caption?: string;
   language?: string;
   break?: boolean;
@@ -202,14 +202,15 @@ export type ItalicNode<T extends InputNodeTypes> = {
 } & {
   children: TextNode;
 };
-
-export type BoldNode = {
-  bold: true;
+export type BoldNode<T extends InputNodeTypes> = {
+  [K in T['strong_mark']]: true;
+} & {
   children: TextNode;
 };
 
-export type StrikeThoughNode = {
-  strikeThrough: true;
+export type StrikeThoughNode<T extends InputNodeTypes> = {
+  [K in T['delete_mark']]: true;
+} & {
   children: TextNode;
 };
 
@@ -230,7 +231,7 @@ export type DeserializedNode<T extends InputNodeTypes> =
   | InlineCodeMarkNode<T>
   | ThematicBreakNode<T>
   | ItalicNode<T>
-  | BoldNode
-  | StrikeThoughNode
+  | BoldNode<T>
+  | StrikeThoughNode<T>
   | InlineCodeNode
   | TextNode;

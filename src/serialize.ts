@@ -1,5 +1,5 @@
 import { BlockType, defaultNodeTypes, LeafType, NodeTypes } from './ast-types';
-import escapeHtml from 'escape-html';
+// import escapeHtml from 'escape-html';
 
 interface Options {
   nodeTypes: NodeTypes;
@@ -147,23 +147,23 @@ export default function serialize(
 
   switch (type) {
     case nodeTypes.heading[1]:
-      return `\n# ${children}\n`;
+      return `# ${children}`;
     case nodeTypes.heading[2]:
-      return `\n## ${children}\n`;
+      return `## ${children}`;
     case nodeTypes.heading[3]:
-      return `\n### ${children}\n`;
+      return `### ${children}`;
     case nodeTypes.heading[4]:
-      return `\n#### ${children}\n`;
+      return `#### ${children}`;
     case nodeTypes.heading[5]:
-      return `\n##### ${children}\n`;
+      return `##### ${children}`;
     case nodeTypes.heading[6]:
-      return `\n###### ${children}\n`;
+      return `###### ${children}`;
 
     case nodeTypes.block_quote:
       // For some reason, marked is parsing blockquotes w/ one new line
       // as contiued blockquotes, so adding two new lines ensures that doesn't
       // happen
-      return `> ${children}\n\n`;
+      return `> ${children}\n`;
 
     case nodeTypes.code_block:
       return `\`\`\`${
@@ -205,10 +205,11 @@ export default function serialize(
       return `${children}\n`;
 
     case nodeTypes.thematic_break:
-      return `\n\n---\n`;
+      return `\n---\n`;
 
     default:
-      return escapeHtml(children);
+      return children;
+    //   return escapeHtml(children);
   }
 }
 

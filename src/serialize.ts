@@ -1,5 +1,4 @@
 import { BlockType, defaultNodeTypes, LeafType, NodeTypes } from './ast-types';
-// import escapeHtml from 'escape-html';
 
 interface Options {
   nodeTypes: NodeTypes;
@@ -209,7 +208,6 @@ export default function serialize(
 
     default:
       return children;
-    //   return escapeHtml(children);
   }
 }
 

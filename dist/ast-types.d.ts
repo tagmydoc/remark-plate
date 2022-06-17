@@ -21,7 +21,7 @@ export interface NodeTypes {
     thematic_break: 'hr';
     image: 'img';
 }
-export declare type MdastNodeType = 'paragraph' | 'heading' | 'list' | 'listItem' | 'link' | 'image' | 'blockquote' | 'code' | 'html' | 'emphasis' | 'strong' | 'delete' | 'inlineCode' | 'thematicBreak' | 'text';
+export declare type MdastNodeType = 'paragraph' | 'heading' | 'list' | 'listItem' | 'link' | 'image' | 'blockquote' | 'code' | 'html' | 'emphasis' | 'strong' | 'delete' | 'inlineCode' | 'thematicBreak' | 'text' | 'break';
 export declare const defaultNodeTypes: NodeTypes;
 export interface LeafType {
     text: string;

@@ -159,6 +159,11 @@ function deserialize(node, opts) {
         }]
       };
 
+    case 'break':
+      return {
+        text: '  \n'
+      };
+
     case 'text':
     default:
       return {
@@ -357,13 +362,13 @@ function serialize(chunk, opts) {
       return "" + spacer + (isOL ? '1.' : '-') + " " + children + (treatAsLeaf ? '\n' : '');
 
     case nodeTypes.paragraph:
-      return children + "\n";
+      return children.replaceAll('\n', '  \n') + "\n";
 
     case nodeTypes.thematic_break:
       return "\n---\n";
 
     default:
-      return children;
+      return children.replaceAll('\n', '  \n');
   }
 } // This function handles the case of a string like this: "   foo   "
 // Where it would be invalid markdown to generate this: "**   foo   **"

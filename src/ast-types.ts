@@ -37,7 +37,8 @@ export type MdastNodeType =
   | 'delete'
   | 'inlineCode'
   | 'thematicBreak'
-  | 'text';
+  | 'text'
+  | 'break';
 
 export const defaultNodeTypes: NodeTypes = {
   paragraph: 'p',

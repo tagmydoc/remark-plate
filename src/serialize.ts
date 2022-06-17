@@ -201,13 +201,13 @@ export default function serialize(
       }`;
 
     case nodeTypes.paragraph:
-      return `${children}\n`;
+      return `${children.replaceAll('\n', '  \n')}\n`;
 
     case nodeTypes.thematic_break:
       return `\n---\n`;
 
     default:
-      return children;
+      return children.replaceAll('\n', '  \n');
   }
 }
 

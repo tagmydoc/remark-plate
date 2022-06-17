@@ -128,7 +128,11 @@ export default function deserialize<T extends InputNodeTypes>(
         children: [{ text: '' }],
       } as ThematicBreakNode<T>;
 
+    case 'break':
+      return { text: '  \n' };
+
     case 'text':
+
     default:
       return { text: node.value || '' };
   }

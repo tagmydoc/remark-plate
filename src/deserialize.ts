@@ -17,6 +17,7 @@ import {
   ThematicBreakNode,
   StrikeThoughNode,
   BoldNode,
+  MentionNode,
 } from './ast-types';
 
 export default function deserialize<T extends InputNodeTypes>(
@@ -116,6 +117,12 @@ export default function deserialize<T extends InputNodeTypes>(
         ...forceLeafNode(children as Array<TextNode>),
         ...persistLeafFormats(children as Array<MdastNode>),
       } as unknown as StrikeThoughNode<T>;
+    case 'mention':
+      return {
+        [types.mention as string]: true,
+        ...forceLeafNode(children as Array<TextNode>),
+        ...persistLeafFormats(children as Array<MdastNode>),
+      } as unknown as MentionNode<T>;
     case 'inlineCode':
       return {
         [types.inline_code_mark as string]: true,

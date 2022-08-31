@@ -20,8 +20,9 @@ export interface NodeTypes {
     inline_code_mark: 'code';
     thematic_break: 'hr';
     image: 'img';
+    mention: 'mention';
 }
-export declare type MdastNodeType = 'paragraph' | 'heading' | 'list' | 'listItem' | 'link' | 'image' | 'blockquote' | 'code' | 'html' | 'emphasis' | 'strong' | 'delete' | 'inlineCode' | 'thematicBreak' | 'text' | 'break';
+export declare type MdastNodeType = 'paragraph' | 'heading' | 'list' | 'listItem' | 'link' | 'image' | 'blockquote' | 'code' | 'html' | 'emphasis' | 'strong' | 'delete' | 'inlineCode' | 'thematicBreak' | 'text' | 'break' | 'mention';
 export declare const defaultNodeTypes: NodeTypes;
 export interface LeafType {
     text: string;
@@ -30,6 +31,8 @@ export interface LeafType {
     italic?: boolean;
     code?: boolean;
     parentType?: string;
+    mention?: boolean;
+    value?: string;
 }
 export interface BlockType {
     type: string;
@@ -62,6 +65,7 @@ export interface InputNodeTypes {
     inline_code_mark: string;
     thematic_break: string;
     image: string;
+    mention: string;
 }
 declare type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
@@ -150,9 +154,14 @@ export declare type StrikeThoughNode<T extends InputNodeTypes> = {
 } & {
     children: TextNode;
 };
+export declare type MentionNode<T extends InputNodeTypes> = {
+    [K in T['mention']]: true;
+} & {
+    children: TextNode;
+};
 export declare type InlineCodeNode = {
     code: true;
     text: string | undefined;
 };
-export declare type DeserializedNode<T extends InputNodeTypes> = CodeBlockNode<T> | HeadingNode<T> | ListNode<T> | ListItemNode<T> | ParagraphNode<T> | LinkNode<T> | ImageNode<T> | BlockQuoteNode<T> | InlineCodeMarkNode<T> | ThematicBreakNode<T> | ItalicNode<T> | BoldNode<T> | StrikeThoughNode<T> | InlineCodeNode | TextNode;
+export declare type DeserializedNode<T extends InputNodeTypes> = CodeBlockNode<T> | HeadingNode<T> | ListNode<T> | ListItemNode<T> | ParagraphNode<T> | LinkNode<T> | ImageNode<T> | BlockQuoteNode<T> | InlineCodeMarkNode<T> | ThematicBreakNode<T> | ItalicNode<T> | BoldNode<T> | MentionNode<T> | StrikeThoughNode<T> | InlineCodeNode | TextNode;
 export {};

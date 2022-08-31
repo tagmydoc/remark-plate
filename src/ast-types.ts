@@ -20,6 +20,7 @@ export interface NodeTypes {
   inline_code_mark: 'code';
   thematic_break: 'hr';
   image: 'img';
+  mention: 'mention';
 }
 
 export type MdastNodeType =
@@ -38,7 +39,8 @@ export type MdastNodeType =
   | 'inlineCode'
   | 'thematicBreak'
   | 'text'
-  | 'break';
+  | 'break'
+  | 'mention';
 
 export const defaultNodeTypes: NodeTypes = {
   paragraph: 'p',
@@ -62,6 +64,7 @@ export const defaultNodeTypes: NodeTypes = {
   inline_code_mark: 'code',
   thematic_break: 'hr',
   image: 'img',
+  mention: 'mention',
 };
 
 export interface LeafType {
@@ -71,6 +74,8 @@ export interface LeafType {
   italic?: boolean;
   code?: boolean;
   parentType?: string;
+  mention?: boolean;
+  value?: string;
 }
 
 export interface BlockType {
@@ -105,6 +110,7 @@ export interface InputNodeTypes {
   inline_code_mark: string;
   thematic_break: string;
   image: string;
+  mention: string;
 }
 
 type RecursivePartial<T> = {
@@ -215,6 +221,12 @@ export type StrikeThoughNode<T extends InputNodeTypes> = {
   children: TextNode;
 };
 
+export type MentionNode<T extends InputNodeTypes> = {
+  [K in T['mention']]: true;
+} & {
+  children: TextNode;
+};
+
 export type InlineCodeNode = {
   code: true;
   text: string | undefined;
@@ -233,6 +245,7 @@ export type DeserializedNode<T extends InputNodeTypes> =
   | ThematicBreakNode<T>
   | ItalicNode<T>
   | BoldNode<T>
+  | MentionNode<T>
   | StrikeThoughNode<T>
   | InlineCodeNode
   | TextNode;

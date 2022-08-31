@@ -36,11 +36,12 @@ var defaultNodeTypes = {
   delete_mark: 'strikethrough',
   inline_code_mark: 'code',
   thematic_break: 'hr',
-  image: 'img'
+  image: 'img',
+  mention: 'mention'
 };
 
 function deserialize(node, opts) {
-  var _opts$nodeTypes, _opts$linkDestination, _opts$imageSourceKey, _opts$imageCaptionKey, _ref, _ref2, _node$value, _extends2, _extends3, _extends4, _extends5;
+  var _opts$nodeTypes, _opts$linkDestination, _opts$imageSourceKey, _opts$imageCaptionKey, _ref, _ref2, _node$value, _extends2, _extends3, _extends4, _extends5, _extends6;
 
   var types = _extends({}, defaultNodeTypes, opts === null || opts === void 0 ? void 0 : opts.nodeTypes, {
     heading: _extends({}, defaultNodeTypes.heading, opts === null || opts === void 0 ? void 0 : (_opts$nodeTypes = opts.nodeTypes) === null || _opts$nodeTypes === void 0 ? void 0 : _opts$nodeTypes.heading)
@@ -144,8 +145,11 @@ function deserialize(node, opts) {
     case 'delete':
       return _extends((_extends4 = {}, _extends4[types.delete_mark] = true, _extends4), forceLeafNode(children), persistLeafFormats(children));
 
+    case 'mention':
+      return _extends((_extends5 = {}, _extends5[types.mention] = true, _extends5), forceLeafNode(children), persistLeafFormats(children));
+
     case 'inlineCode':
-      return _extends((_extends5 = {}, _extends5[types.inline_code_mark] = true, _extends5.text = node.value, _extends5), persistLeafFormats(children));
+      return _extends((_extends6 = {}, _extends6[types.inline_code_mark] = true, _extends6.text = node.value, _extends6), persistLeafFormats(children));
 
     case 'thematicBreak':
       return {
@@ -190,7 +194,7 @@ function persistLeafFormats(children) {
 }
 
 var isLeafNode = function isLeafNode(node) {
-  return typeof node.text === 'string';
+  return typeof node.text === 'string' || typeof node.value === 'string';
 };
 
 var VOID_ELEMENTS = ['thematic_break', 'image'];
@@ -211,7 +215,7 @@ function serialize(chunk, opts) {
       ignoreParagraphNewline = _opts$ignoreParagraph === void 0 ? false : _opts$ignoreParagraph,
       _opts$listDepth = _opts.listDepth,
       listDepth = _opts$listDepth === void 0 ? 0 : _opts$listDepth;
-  var text = chunk.text || '';
+  var text = chunk.text || chunk.value || '';
   var type = chunk.type || '';
 
   var nodeTypes = _extends({}, defaultNodeTypes, userNodeTypes, {
@@ -280,7 +284,9 @@ function serialize(chunk, opts) {
   // which is invalid markup and can mess everything up
 
   if (children !== BREAK_TAG && isLeafNode(chunk)) {
-    if (chunk.strikethrough && chunk.bold && chunk.italic) {
+    if (chunk.mention) {
+      children = retainWhitespaceAndFormat(children, '**');
+    } else if (chunk.strikethrough && chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '~~***');
     } else if (chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '***');
@@ -362,6 +368,9 @@ function serialize(chunk, opts) {
 
     case nodeTypes.thematic_break:
       return "\n---\n";
+
+    case nodeTypes.mention:
+      return "**" + children + "**";
 
     default:
       return children.replaceAll('\n', '  \n');

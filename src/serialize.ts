@@ -7,7 +7,10 @@ interface Options {
 }
 
 const isLeafNode = (node: BlockType | LeafType): node is LeafType => {
-  return typeof (node as LeafType).text === 'string';
+  return (
+    typeof (node as LeafType).text === 'string' ||
+    typeof (node as LeafType).value === 'string'
+  );
 };
 
 const VOID_ELEMENTS: Array<keyof NodeTypes> = ['thematic_break', 'image'];
@@ -24,7 +27,7 @@ export default function serialize(
     listDepth = 0,
   } = opts;
 
-  let text = (chunk as LeafType).text || '';
+  let text = (chunk as LeafType).text || (chunk as LeafType).value || '';
   let type = (chunk as BlockType).type || '';
 
   const nodeTypes: NodeTypes = {
@@ -121,7 +124,9 @@ export default function serialize(
   // "Text foo bar **baz**" resulting in "**Text foo bar **baz****"
   // which is invalid markup and can mess everything up
   if (children !== BREAK_TAG && isLeafNode(chunk)) {
-    if (chunk.strikethrough && chunk.bold && chunk.italic) {
+    if (chunk.mention) {
+      children = retainWhitespaceAndFormat(children, '**');
+    } else if (chunk.strikethrough && chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '~~***');
     } else if (chunk.bold && chunk.italic) {
       children = retainWhitespaceAndFormat(children, '***');
@@ -205,6 +210,8 @@ export default function serialize(
 
     case nodeTypes.thematic_break:
       return `\n---\n`;
+    case nodeTypes.mention:
+      return `**${children}**`;
 
     default:
       return children.replaceAll('\n', '  \n');
